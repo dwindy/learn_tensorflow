@@ -101,13 +101,14 @@ saver = tf.train.Saver()
 def train():
     sess = tf.InteractiveSession()
     sess.run(tf.global_variables_initializer())
-    for i in range(100000):
+    for i in range(5000):
         batch = mnist.train.next_batch(50)
         _, cost, acc = sess.run([train_op, c_loss, accuracy], feed_dict={x:batch[0], y_:batch[1]})
         if i%100 == 0:
             print ("step %d, cost %g , training accuracy %g" % (i, cost, acc))
             saver.save(sess, 'save_model/new')
-
+    writer = tf.summary.FileWriter("tensorboard/",sess.graph)
+    writer.close()
 def predict():
     sess = tf.InteractiveSession()
     sess.run(tf.global_variables_initializer())
@@ -117,4 +118,4 @@ def predict():
         x:mnist.test.images, y_:mnist.test.labels}))
 
 train()
-predict()
+#predict()
