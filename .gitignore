@@ -102,3 +102,7 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# folders for dataset
+/dataset/
+/cat_face_detect/dataset
