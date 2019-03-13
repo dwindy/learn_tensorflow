@@ -117,7 +117,7 @@ def loadData():
 def init_net(input_data):
     with tf.variable_scope('layer1'):
         weight = tf.Variable(tf.random_normal([7,3],stddev=1),name="w1")
-        biase = tf.Variable(tf.zeros([1,3])+ 0.1,name="b1") 
+        biase = tf.Variable(tf.random_normal([1,3])+ 0.1,name="b1") 
         L1 = tf.matmul(input_data,weight)+biase
         print("weight shape ",weight.shape)
         print("biase shape ",biase.shape)
@@ -125,7 +125,7 @@ def init_net(input_data):
     L1 = tf.nn.softmax(L1)
     with tf.variable_scope('layer2'):
         weight = tf.Variable(tf.random_normal([3,1],stddev=1),name="w2")
-        biase = tf.Variable(tf.zeros([1,1])+ 0.1,name="b2") 
+        biase = tf.Variable(tf.random_normal([1,1])+ 0.1,name="b2") 
         Y_pre = tf.matmul(L1,weight)+biase
         print("weight shape ",weight.shape)
         print("biase shape ",biase.shape)
@@ -137,7 +137,7 @@ def init_net(input_data):
 def init_single_layer(input_data):
     with tf.variable_scope('layer1'):
         weight = tf.Variable(tf.random_normal([7,1],stddev=1),name="w1")
-        biase = tf.Variable(tf.zeros([1,1])+ 0.1,name="b1") 
+        biase = tf.Variable(tf.random_normal([1,1])+ 0.1,name="b1") 
         result = tf.matmul(input_data,weight)+biase
         pred = tf.nn.softmax(result)
         print("weight shape ",weight.shape)
@@ -155,16 +155,16 @@ Y_pro = init_single_layer(X)
 
 loss = tf.reduce_mean(tf.reduce_sum(tf.square(Y_pro - Y)))
 
-train_step = tf.train.GradientDescentOptimizer(0.1).minimize(loss)
-
-#tf.global_variables_initializer()
+#train_step = tf.train.GradientDescentOptimizer(0.1).minimize(loss)
+train_step = tf.train.AdamOptimizer(0.01).minimize(loss)
+init=tf.global_variables_initializer()
 
 with tf.Session() as sess:
-    sess.run(tf.global_variables_initializer())
-#    train_data_feed = np.array(train_data)
-#    #print(train_data_feed.shape)
-#    train_label_feed = np.array(train_label)
-#    #print(train_label_feed.shape)
+    sess.run(init)
+    train_data_feed = np.array(train_data)
+    #print(train_data_feed.shape)
+    train_label_feed = np.array(train_label)
+    #print(train_label_feed.shape)
     epoches = 10000
     for e in range(epoches):
         sess.run(train_step, feed_dict={X:train_data_feed, Y:train_label_feed})
